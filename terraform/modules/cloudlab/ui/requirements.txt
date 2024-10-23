@@ -1,0 +1,11 @@
+firebase_admin==6.0.1
+Flask==2.2.2
+Flask_WTF==1.0.1
+WTForms==3.0.1
+python-dotenv==1.0.0
+google-cloud-secret-manager==2.10.0
+google-cloud-logging==3.10.0
+python-jose==3.3.0
+PySnooper==1.1.1
+#Werkzeug needed for unhandled Flask dependency error
+Werkzeug==2.2.2

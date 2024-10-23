@@ -1,0 +1,15 @@
+gcloud source repos clone cloudlab-repo
+cp -r repo-code/. cloudlab-repo/
+
+cd cloudlab-repo
+
+For changes to the cloudlab-repo that is used for existing Cloud Lab Projects and the skeleton files for project creation, then push to main
+git checkout google main
+
+If making changes to the persistent state of Cloud Lab, please push to google master
+
+**Changes made to main will be applied on push of the commit**
+
+git add .
+git commit -m "Initial load"
+git push

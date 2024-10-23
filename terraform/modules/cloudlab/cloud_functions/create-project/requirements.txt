@@ -1,0 +1,9 @@
+# Copyright 2021 Google. This software is provided as-is, without warranty
+# or representation for any use or purpose. Your use of it is subject to
+# your agreement with Google.
+#google-cloud-pubsub==2.9.0
+requests
+google-cloud-tasks==2.10.4
+#google-cloud-firestore==2.10.1
+google-cloud-compute==1.14.1
+firebase_admin

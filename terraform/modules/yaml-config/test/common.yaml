@@ -1,0 +1,7 @@
+# common values
+
+project_id: "REPLACE_ME_SEED_PROJECT"
+org_id: 1234567789
+billing_account: "REPLACE_ME_BILLING_ACCOUNT"
+
+default_region: "us-central1"

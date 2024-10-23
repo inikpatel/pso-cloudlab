@@ -1,0 +1,77 @@
+# [opt] Contacts for billing alerts and important notifications
+
+essential_contacts:
+  {%- if group %}
+  - {{group}}
+  {%- else %}
+  - cloudlab-ops@example.com
+  {%- endif %}
+
+# Folder the project will be created as children of
+folder_id: {{ folder_id }}
+
+# template
+template: "cloud-run"
+
+# [opt] Authoritative IAM bindings in group => [roles] format
+group_iam:
+  {%- if group %}
+  {{ group }}:
+  {%- else %}
+  cloudlab-ops@example.com:
+  {%- endif %}
+    - roles/editor
+    - roles/workstations.admin
+    - roles/compute.networkUser
+    - roles/iap.tunnelResourceAccessor
+    - roles/iap.httpsResourceAccessor
+    - roles/aiplatform.admin
+    - roles/logging.viewAccessor
+    - roles/logging.viewer
+    - roles/source.admin
+    - roles/cloudaicompanion.user
+
+# [opt] Labels for the project - merged with the ones defined in defaults.yaml
+labels:
+  role: sandbox
+  creator: cloudlab
+  requestor:  {{requestor}}
+
+# [opt] APIs to enable on the project - merged with values in defaults.yaml
+services:
+  - storage.googleapis.com
+  - stackdriver.googleapis.com
+  - compute.googleapis.com
+  - workstations.googleapis.com
+  - aiplatform.googleapis.com
+  - notebooks.googleapis.com
+  - networkmanagement.googleapis.com
+  - networkconnectivity.googleapis.com
+  - monitoring.googleapis.com
+  - iap.googleapis.com
+  - dataform.googleapis.com
+
+#shared vpc config
+vpc:
+  # [opt] If set, enables the container API
+  {% if host_project %}
+  gke_setup:
+    # Grants "roles/container.hostServiceAgentUser" to the container robot if set
+    enable_host_service_agent: false
+
+    # Grants  "roles/compute.securityAdmin" to the container robot if set
+    enable_security_admin: false
+  {% endif %}
+
+  # Host project the project will be service project of
+  {% if host_project %}
+  host_project: {{host_project}}
+  {% endif %}
+
+  # [opt] Subnets in the host project where principals will be granted networkUser
+  # in region/subnet-name => [principals]
+  {% if subnet %}
+  subnets_iam:
+    {{subnet}}:
+      - group:{{group}}
+  {% endif %}

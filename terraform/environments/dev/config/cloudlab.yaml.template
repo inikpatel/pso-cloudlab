@@ -1,0 +1,52 @@
+# Cloud lab configuration file 
+# Project Name of the 'builder' project.
+cloudlab_project_name: "cloudlab"
+
+# Prefix to be prepended to Cloud Lab projects
+prefix: "prj"
+
+# Region in which to deploy both the 'builder' project and subsequent Cloud Lab Projects
+region: "us-east1"
+
+# The organization ID
+org_id: "123456789012"
+
+# Folder that holds build project and Cloud lab projects
+folder_id: "123456789012"   # cloudlab/dev
+
+# Billing ID of the billing account to be used for Cloud Lab Projects
+billing_account: "000000-111111-ABCDEF"
+
+# Group that will be used for the organization administrators
+group_org_admins: "gcp-organization-admins@example.com"
+
+# Group that will be used for the billing administrators
+group_billing_admins: "gcp-billing-admins@example.com"
+
+# Terraform build service account
+tf_service_account: "sa-terraform-proj@prj-b-seed-562a.iam.gserviceaccount.com"
+
+# email of the service account to use for Cloud Lab deployment and automation
+service_account_email: "cloudlab-terraform-sa@prj-b-seed-562a.iam.gserviceaccount.com"
+
+# service account project id
+service_account_project_id: "prj-b-seed-562a"
+
+# Service account name (not email) to be used for querying Cloud Identity or any identity related calls
+identity_service_account: "sa-terraform-proj"
+
+# 3 letter abbreviation for the environment in which the Cloud Lab Projects FOLDER and child PROJECTS will be deployed
+environment: "dev"
+
+# Fully qualified domain name for the Cloud Lab UI
+org_domain: "example.com"
+
+# SSL certificate used by load balancer
+# ssl_certificates : [ "https://www.googleapis.com/compute/v1/projects/prj-b-seed-562a/global/sslCertificates/cloudlab-2" ]
+
+# Uncomment after initial run if enabling IAP:
+enable_iap: true
+
+iap_support_email: "gcp-devops@example.com"
+
+ui_fqdn: "cloudlab-dev.example.com"

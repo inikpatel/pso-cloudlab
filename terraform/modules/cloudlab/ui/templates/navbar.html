@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<style>
+        @font-face { font-family: ProductSans-Regular; src: url("{{ url_for('static', filename='ProductSans-Regular.ttf') }}");}
+</style>
+    <div class="container-fluid" style="font-family: ProductSans-Regular">
+      <a class="navbar-brand" href="{{ url_for('project') }}">
+        <img src="static/logo2.svg" alt="" height="30" width="60" class="d-inline-block align-top"/>
+        Cloud Lab
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('project') }}">Cloud Lab Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" style="background-color: #34A853; color: #ffffff" href="http://console.cloud.google.com/" target="_blank">Google Cloud Console</a>
+        </li>
+        </ul>
+
+      </div>
+    </div>
+  </nav>

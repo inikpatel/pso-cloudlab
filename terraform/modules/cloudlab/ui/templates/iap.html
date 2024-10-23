@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=80%; initial-scale=1">
+	<title>Google IAP Header Outputs</title>
+</head>
+<body>
+	<body style="font-family: Menlo, monospace, monospace-ui;">
+
+		<h1>{{ dt }}</h1>
+
+		<h2>Header Values</h2>
+		<table>
+			{% for i, (k, v) in enumerate(headers.items()): %}
+			<tr><td>{{ k }}</td><td>{{ v }}</td></tr>
+			{% endfor %}
+		</table>
+
+		<h2>Raw Headers</h2>
+		<p>{{ headers }}</p>
+
+	</body>
+</html>

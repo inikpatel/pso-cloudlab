@@ -1,0 +1,50 @@
+# skip boilerplate check
+# This file should be modified to include the corresponding values
+billing_account_id: 0176C0-4A20F1-E39EFD
+
+# [opt] Setup for billing alerts
+billing_alert:
+  amount: 6000
+  thresholds:
+    current: [0.5, 0.8, 1, 1.5]
+    forecasted: [0.5, 1.0]
+  credit_treatment: EXCLUDE_ALL_CREDITS
+  calendar_period: QUARTER
+#  custom_period:
+#    start_date:
+#      year: 2023
+#      month: 01
+#      day: 01
+  #default pubsub topic here:
+  #pubsub_topic: "projects/{project_id}/topics/{topic_id}"
+  pubsub_topic: "projects/prj-cloudlab-dev-032f/topics/prj-cloudlab-budget-notificaiton-topic-dev"
+
+# [opt] Contacts for billing alerts and important notifications
+essential_contacts: []
+
+# [opt] Labels set for all projects
+labels:
+  role: sandbox
+  hosting: cloudlab-projects
+  creator: cloudlab
+
+# [opt] Services to enable on each project by API
+# Additional services can be specified in the project's yaml file
+services:
+  - storage.googleapis.com
+  - stackdriver.googleapis.com
+  - compute.googleapis.com
+  - workstations.googleapis.com
+  - aiplatform.googleapis.com
+  - notebooks.googleapis.com
+  - networkmanagement.googleapis.com
+  - networkconnectivity.googleapis.com
+  - monitoring.googleapis.com
+  - iap.googleapis.com
+  - dataform.googleapis.com
+  - serviceusage.googleapis.com
+  - cloudbilling.googleapis.com
+
+# [opt] Additional notification channels for billing
+notification_channels: []
+environment_dns_zone:

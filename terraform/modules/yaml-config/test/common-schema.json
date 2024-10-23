@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "properties": {
+    "billing_account": {"type": "string"},
+    "org_id": {"type": "number"},
+    "bootstrap_user": {"type": "string"},
+    "project_id": {"type": "string"},
+    "default_region": {"type": "string"}
+  },
+  "required": ["billing_account", "org_id"]
+}

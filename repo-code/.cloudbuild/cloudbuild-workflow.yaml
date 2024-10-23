@@ -1,0 +1,87 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+steps:
+  - name: alpine:3
+    id: tf-download
+    entrypoint: sh
+    args:
+    - -eEuo
+    - pipefail
+    - -c
+    - |-
+      mkdir -p /builder/home/.local/bin
+      wget https://releases.hashicorp.com/terraform/${_TF_VERSION}/terraform_${_TF_VERSION}_linux_amd64.zip
+      unzip terraform_${_TF_VERSION}_linux_amd64.zip -d /builder/home/.local/bin
+      rm terraform_${_TF_VERSION}_linux_amd64.zip
+      chmod 755 /builder/home/.local/bin/terraform
+  # - name: alpine:3
+  #   id: tf-check-format
+  #   entrypoint: sh
+  #   args:
+  #   - -eEuo
+  #   - pipefail
+  #   - -c
+  #   - |-
+  #     terraform fmt -recursive -check /workspace/
+  - name: alpine:3
+    id: tf-init
+    entrypoint: sh
+    args:
+    - -eEuo
+    - pipefail
+    - -c
+    - |-
+      terraform init -backend-config="bucket=${_TF_STATE_BUCKET}" -backend-config="prefix=${_PREFIX}" -no-color
+  - name: alpine:3
+    id: tf-check-validate
+    entrypoint: sh
+    args:
+    - -eEuo
+    - pipefail
+    - -c
+    - |-
+      terraform validate -no-color
+  - name: alpine:3
+    id: tf-plan
+    entrypoint: sh
+    args:
+    - -eEuo
+    - pipefail
+    - -c
+    - |-
+      terraform plan -var prefix=${_PREFIX} -no-color -input=false -out plan.out
+    # terraform plan -parallelism=50 -var customer_id=${_CUSTOMER_ID} -var customer_domain=${_CUSTOMER_DOMAIN} -var workspace_sa=`wget -q --output-document - --header="Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/email` -parallelism=50 -no-color -input=false -out plan.out
+    # store artifact and ask for approval here if needed
+  - name: alpine:3
+    id: tf-apply
+    entrypoint: sh
+    args:
+    - -eEuo
+    - pipefail
+    - -c
+    - |-
+      terraform apply -no-color -input=false -auto-approve plan.out
+options:
+  env:
+    - PATH=/usr/local/bin:/usr/bin:/bin:/builder/home/.local/bin
+    #- TF_LOG=DEBUG
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _TF_VERSION: 1.6.1
+  #_TF_STATE_BUCKET:
+  #_FAST_OUTPUTS_BUCKET: ${outputs_bucket}
+  #_TF_PROVIDERS_FILE: ${tf_providers_file}
+  #_TF_VAR_FILES: ${tf_var_files == [] ? "''" : join("\n    ", tf_var_files)}

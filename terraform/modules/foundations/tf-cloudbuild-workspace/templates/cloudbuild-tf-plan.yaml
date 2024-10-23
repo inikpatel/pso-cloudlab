@@ -1,0 +1,47 @@
+timeout: 1200s
+logsBucket: "gs://${_ARTIFACT_BUCKET_NAME}/cloudbuild-logs/pull-trigger"
+steps:
+- id: 'tf init'
+  name: ${_GAR_REGION}-docker.pkg.dev/${_GAR_PROJECT_ID}/${_GAR_REPOSITORY}/terraform:${_DOCKER_TAG_VERSION_TERRAFORM}
+  dir: "${_WORKSTREAM_PATH}"
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+              env=${env#*/}
+              echo ""
+              echo "*************** TERRAFORM INIT ******************"
+              echo "******* At environment: ${_WORKSTREAM_PATH} *********"
+              echo "*************************************************"
+              terraform init || exit 1
+
+- id: 'tf validate'
+  name: ${_GAR_REGION}-docker.pkg.dev/${_GAR_PROJECT_ID}/${_GAR_REPOSITORY}/terraform:${_DOCKER_TAG_VERSION_TERRAFORM}
+  dir: "${_WORKSTREAM_PATH}"
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+              env=${env#*/}
+              echo ""
+              echo "*************** TERRAFORM VALIDATE ******************"
+              echo "******* At environment: ${_WORKSTREAM_PATH} *********"
+              echo "*************************************************"
+              terraform validate || exit 1
+
+- id: 'tf plan'
+  name: ${_GAR_REGION}-docker.pkg.dev/${_GAR_PROJECT_ID}/${_GAR_REPOSITORY}/terraform:${_DOCKER_TAG_VERSION_TERRAFORM}
+  dir: "${_WORKSTREAM_PATH}"
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+              env=${env#*/}
+              echo ""
+              echo "*************** TERRAFORM PLAN ******************"
+              echo "******* At environment: ${_WORKSTREAM_PATH} *********"
+              echo "*************************************************"
+              terraform plan -lock=false -input=false || exit 1
+options:
+  pool:
+    name: '${_WORKER_POOL}'

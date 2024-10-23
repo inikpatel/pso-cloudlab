@@ -1,0 +1,75 @@
+timeout: 3600s
+steps:
+- id: 'tf init'
+  name: ${_GAR_REGION}-docker.pkg.dev/${_GAR_PROJECT_ID}/${_GAR_REPOSITORY}/terraform:${_DOCKER_TAG_VERSION_TERRAFORM}
+  dir: "${_WORKSTREAM_PATH}"
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+              echo ""
+              echo "*************** TERRAFORM INIT ******************"
+              echo "******* At environment: ${_WORKSTREAM_PATH} *************"
+              echo "*************************************************"
+              terraform init || exit 1
+
+- id: 'tf validate'
+  name: ${_GAR_REGION}-docker.pkg.dev/${_GAR_PROJECT_ID}/${_GAR_REPOSITORY}/terraform:${_DOCKER_TAG_VERSION_TERRAFORM}
+  dir: "${_WORKSTREAM_PATH}"
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+              echo ""
+              echo "*************** TERRAFORM VALIDATE ******************"
+              echo "******* At environment: ${_WORKSTREAM_PATH} *************"
+              echo "*************************************************"
+              terraform validate || exit 1
+
+- id: 'tf plan'
+  name: ${_GAR_REGION}-docker.pkg.dev/${_GAR_PROJECT_ID}/${_GAR_REPOSITORY}/terraform:${_DOCKER_TAG_VERSION_TERRAFORM}
+  dir: "${_WORKSTREAM_PATH}"
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+              echo ""
+              echo "*************** TERRAFORM PLAN ******************"
+              echo "******* At environment: ${_WORKSTREAM_PATH} *************"
+              echo "*************************************************"
+              terraform plan -input=false -out="${BUILD_ID}_tfplan.plan" || exit 1
+
+- id: 'tf apply'
+  name: ${_GAR_REGION}-docker.pkg.dev/${_GAR_PROJECT_ID}/${_GAR_REPOSITORY}/terraform:${_DOCKER_TAG_VERSION_TERRAFORM}
+  dir: "${_WORKSTREAM_PATH}"
+  entrypoint: 'sh'
+  args:
+  - '-c'
+  - |
+              echo ""
+              echo "*************** TERRAFORM APPLY ******************"
+              echo "******* At environment: ${_WORKSTREAM_PATH} ***********"
+              echo "*************************************************"
+              terraform apply -auto-approve -input=false "${BUILD_ID}_tfplan.plan" || exit 1
+
+artifacts:
+  objects:
+    location: 'gs://${_ARTIFACT_BUCKET_NAME}/terraform/cloudbuild/apply/${_WORKSTREAM_NAME}/$BUILD_ID'
+    paths: ['${_WORKSTREAM_PATH}/*.plan']
+logsBucket: 'gs://${_LOG_BUCKET_NAME}'
+substitutions:
+  _PRIVATE_POOL: "projects/prj-b-cicd-yye3/locations/us-east1/workerPools/private-pool-eglm"
+  _ARTIFACT_BUCKET_NAME: "bkt-prj-cloudlab-c-infra-p1w4-cloudlab-artifacts"
+  _BILLING_ID: "0176C0-4A20F1-E39EFD"
+  _DOCKER_TAG_VERSION_TERRAFORM: "v1"
+  _GAR_PROJECT_ID: "prj-b-cicd-yye3"
+  _GAR_REGION: "us-east1"
+  _GAR_REPOSITORY: "tf-runners"
+  _LOG_BUCKET_NAME: "bkt-prj-cloudlab-c-infra-p1w4-cloudlab-logs"
+  _STATE_BUCKET_NAME: "bkt-prj-cloudlab-c-infra-p1w4-cloudlab-state"
+  _WORKSTREAM_NAME: "cloudlab"
+  _WORKSTREAM_PATH: "terraform/environments/dev"
+options:
+  substitutionOption: 'ALLOW_LOOSE'
+  # pool:
+  #   name: '${_PRIVATE_POOL}'
